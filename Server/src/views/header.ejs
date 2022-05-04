@@ -1,0 +1,135 @@
+<div class="header" id="head">
+    <div class="header_top">
+        <div class="header_item_left">
+            <div class="header_item itemCanSelect" id="item--dm" idItemShow="header__nav--cm" onclick="showClick('item--dm','header__nav--cm')">
+                <div class="header_item_block">
+                    <div class="header_text_icon">
+                        <i class="fas fa-bars iconItem"></i>
+                        <i class="far fa-times-circle itemClose"></i>
+                    </div>
+                    <div class="header_item_text">chuyên mục</div>
+                </div>
+            </div>
+            <div class="header_item itemCanSelect" id="item--ti" idItemShow="header__nav--ti" onclick="showClick('item--ti','header__nav--ti')">
+                <div class="header_item_block">
+                    <div class="header_text_icon">
+                        <i class="fas fa-puzzle-piece iconItem"></i>
+                        <i class="far fa-times-circle itemClose"></i>
+                    </div>
+                    <div class="header_item_text">tiện ích</div>
+                </div>
+            </div>
+            <a href="./danhchoban.html" class="header_item header_item_linkpage">
+                <div class="header_item_block">
+                    <div class="header_text_icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="header_item_text">dành cho bạn</div>
+                </div>
+            </a>
+            <div class="header_item">
+                <div class="header_item_block header_clear_border">
+                    <div class="header_text_icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="header_item_text">việc làm</div>
+                </div>
+            </div>
+        </div>
+        <div class="header_logo">
+            <a href="/" class="header_logo_text">báo chí</a>
+        </div>
+        <div class="header_item_right">
+            <div class="header_item" onclick="closeTabLogin(0)">
+                <div class="header_item_block header_clear_border">
+                    <div class="header_text_icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="header_item_text">đăng nhập</div>
+                </div>
+            </div>
+            <div class="header_item itemCanSelect" id="item--lh" idItemShow="header__nav--lh" onclick="showClick('item--lh','header__nav--lh')">
+                <div class="header_item_block">
+                    <div class="header_text_icon">
+                        <i class="fas fa-paper-plane iconItem"></i>
+                        <i class="far fa-times-circle itemClose"></i>
+                    </div>
+                    <div class="header_item_text">liên hệ</div>
+                </div>
+            </div>
+            <div class="header_item">
+                <div class="header_item_block">
+                    <div class="header_text_icon">
+                        <i class="far fas fa-lightbulb"></i>
+                    </div>
+                    <div class="header_item_text">bạn cần biết</div>
+                </div>
+            </div>
+            <div class="header_item itemCanSelect" id="item--tk" idItemShow="header__nav--tk"  onclick="showClick('item--tk','header__nav--tk')">
+                <div class="header_item_block ">
+                    <div class="header_text_icon">
+                        <i class="fas fa-search iconItem"></i>
+                        <i class="far fa-times-circle itemClose"></i>
+                    </div>
+                    <div class="header_item_text">tìm kiếm</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header_bottom">
+        <% headerBottom.map(item =>{ %>
+          <a href=<%=item.link %> class="header_btm_item"> 
+            <div class="header_btm_text">
+               <%=  item.name %>
+            </div>
+        </a>
+        <% }) %>
+        
+    </div>
+    <div class="header_navigation cl" >
+        <ul class="list_navigation cl" id="header__nav--cm">
+            <li class="list_nav_item">
+                <a href="#" class="list_nav_link">
+                    video
+                </a>
+                <div class="list_nav-child">
+                    <ul class="child_list">
+                        <% headerBottom.map(item =>{ %>
+                        <li class="child_item">
+                            <a href=<%=item.link%> class="child_item_link"><%=item.name%></a>
+                        </li>
+                        <% }) %>
+                    </ul>
+                </div>
+            </li>
+           
+        <ul class="list_nav_ti cl" id="header__nav--ti">
+            <li class="nav_ti_item">
+                <a href="#" class="nav_ti_link">
+                    <i class="fas fa-wallet"></i>
+                    <div class="nav_ti_text">thanh toán</div>
+                </a>
+            </li>
+            
+        </ul>
+        <div class="nav_tk cl" id="header__nav--tk">
+            <input type="text" name="Tìm kiếm" placeholder="Tìm kiếm" id="nav_search">
+            <a href="#" class="fas fa-search"></a>
+        </div>
+        <ul class="list_nav_ti cl" id="header__nav--lh">
+            <li class="nav_ti_item">
+                <a href="#" class="nav_ti_link">
+                    <i class="far fa-newspaper"></i>
+                    <div class="nav_ti_text">đặt báo</div>
+                </a>
+            </li>
+            <li class="nav_ti_item">
+                <a href="#" class="nav_ti_link">
+                    <i class="fas fa-phone-alt"></i>
+                    <div class="nav_ti_text">0906 645 777</div>
+                </a>
+            </li>
+        </ul>
+    </div>
+   <%- include("login.ejs")%>
+</div>

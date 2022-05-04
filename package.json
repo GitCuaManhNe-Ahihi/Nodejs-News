@@ -1,0 +1,40 @@
+{
+  "name": "PageNews",
+  "private": true,
+  "version": "0.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "start": "nodemon --exec  ./node_modules/.bin/babel-node Server/src/server.js"
+  },
+  "dependencies": {
+    "@babel/node": "^7.16.8",
+    "axios": "^0.26.1",
+    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.0",
+    "cloudinary": "^1.29.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "date-fns": "^2.28.0",
+    "dotenv": "^16.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "firebase": "^9.6.8",
+    "http-proxy-middleware": "^2.0.4",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "mammoth": "^1.4.21",
+    "moment": "^2.29.3",
+    "multer": "^1.4.4",
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.15",
+    "sequelize": "^6.18.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.8",
+    "@babel/preset-env": "^7.16.11",
+    "nodemon": "^2.0.15",
+    "sass": "^1.49.9",
+    "sequelize-cli": "^6.4.1"
+  }
+}

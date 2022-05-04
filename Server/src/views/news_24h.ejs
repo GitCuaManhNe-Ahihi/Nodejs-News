@@ -1,0 +1,31 @@
+<% if(post24h.length > 0){ %>
+<div class="news" id="tin24h">
+  <div class="content_inner">
+    <h3 class="news_heading padding-20">
+      <a href="#" class="visted--none">
+        <i class="fa-solid fa-clock icon_heading"></i>tin 24h
+      </a>
+    </h3>
+    <div class="grid-container-5">
+      <% for (let i = 0; i < post24h.length; i++) { %>
+      <a href="/post?id=<%=post24h[i].id%>" class="grid-item">
+        <div class="item__news_thumbnail">
+            <% var index, lastindex; %>
+            <%  index =post24h[i].content.indexOf('<img src="')+10;%>
+            <% lastindex = post24h[i].content.indexOf('"',index+2); %> 
+            <% var image = post24h[i].content.slice(index,lastindex); %> 
+          <img
+            src=" <%= image%>"
+            alt="tin tức 24h"
+            class="item__news_img"
+          />
+          <h4 class="item__news_heading"><%= post24h[i].title %> 
+          </h4>
+          <div class="item__news_location"><%= post24h[i]['genres.name']%></div>
+        </div>
+      </a>
+      <% } %>
+    </div>
+  </div>
+</div>
+<% } %>

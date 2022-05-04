@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Báo chí</title>
+    <link rel="stylesheet" href="./assests/css/grid.css" />
+    <link rel="stylesheet" href="./assests/css/index.css" />
+    <!-- font awesome  -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- css post  -->
+    <link rel="stylesheet" href="./assests/css/post123.css" />
+  </head>
+  <body>
+    <%- include('../header', {headerBottom: headerBottom}); %>
+    <div class="content">
+      <div class="content_inner">
+        <div class="grid-container-1">
+          <div class="grid-item post">
+            <h1 class="post_heading">
+               <%= post.title %>
+            </h1>
+            <%- include('author_info.ejs',{post}) %> 
+            <%- include('meta.ejs',{post,timeofPost}) %>
+            <div class="detail_content">
+              <div class="detail_l_content">
+                <div id="main"></div>
+                <!-- <h3 class="detail_l_heading">
+                  <%= post.subtitle %>
+                </h3>
+                <p>
+                  <%= post.content.substring(0,post.content.indexOf(".",Math.floor(post.content.length/3))) %>
+                </p>
+                <div class="l_thumbnail">
+                  <div class="l_thumbnail_img">
+                    <img src="<%= post.image %>" alt="<%= post.subtitle %>" />
+                  </div>
+                  <div class="text_describe">
+                    <%= post.subtitle %>
+                  </div>
+                  <div class="thumbnail_author"><%= post['user.firstname'] %> <%= post['user.lastname'] %></div>
+                </div>
+                <p>
+                    <%= post.content.substring(post.content.indexOf(".",Math.floor(post.content.length/3))+1,post.content.indexOf(".",Math.floor(post.content.length/3)*2)) %>
+                </p>
+                <p>
+                    <%= post.content.substring(post.content.indexOf(".",Math.floor(post.content.length/3)*2)+1,post.content.length) %>
+                </p>
+                <% if(post.video) { %>
+                <div class="l_thumbnail l_thumbnail_v">
+                    <div class="l_thumbnail_img l_thumbnail_video">
+                        <iframe
+                          width="900"
+                          height="506"
+                          src="<%= post.video %>"
+                          title="YouTube video player"
+                          frameborder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowfullscreen
+                        ></iframe>
+                      </div>
+                  <div class="text_describe">
+                    <%= post.subtitle %>
+                  </div>
+                </div>
+                <% } %> -->
+                <%- include('news_for_you.ejs') %>
+                <%- include('more_news.ejs') %> <%- include('comment_.ejs') %>
+              </div>
+              <div class="detail_r_content">
+                <%- include('../content_tab.ejs',{neartime}) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include('../footer'); %>
+    <a class="go-up" href="#">
+      <i class="fa-solid fa-angle-up"></i>
+    </a>
+
+    <script src="./assests/js/index.js"></script>
+    <script>
+       let data = new DOMParser().parseFromString(`<%=dataHTML%>`, "text/html").documentElement.innerText
+        document.querySelector('#main').innerHTML = data
+    </script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+<div class="r-content_tabs">
+    <div class="r_tabs_index">
+        <div class="r_tabs_name r_active" onclick="openTabsRightContent(event,'r_tabs_tinmoi')">tin mới</div>
+        <div class="r_tabs_name" onclick="openTabsRightContent(event,'r_tabs_docnhieu')">đọc nhiều</div>
+    </div>
+    <div class="r_tabs_content scroll-style">
+        <div id="r_tabs_tinmoi" class="tabs_content_inner ">
+            <% neartime.map(item =>{ %>
+            <div class="tab_content_text">
+                <div class="tab_text_time"><%=item.createdAt.getHours()%>:<%=item.createdAt.getMinutes()%></div>
+                <a href="/post?id=<%item.id%>">
+                    <div class="tab_text_inner">
+                        <%= item.title %>
+                    </div>
+                </a>
+            </div>
+            <% }) %>
+        </div>
+        <div id="r_tabs_docnhieu" class="tabs_content_inner cl">
+            <div class="tab_content_text">
+                <div class="tab_text_time">8:37</div>
+                <a href="#">
+                    <div class="tab_text_inner">
+                        <span><i class="fas fa-play-circle"></i></span>
+                        Các 'siêu anh hùng' đến động viên trẻ em tiêm vắc xin Covid-19 tại Philippines
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
