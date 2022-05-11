@@ -50,46 +50,6 @@ export let handleLogin = async (req, res) => {
     });
   }
 };
-
-export let handleRegister = async (req, res) => {
-  if (
-    req.body.email &&
-    req.body.password &&
-    req.body.address &&
-    req.body.name &&
-    req.body.phone &&
-    req.body.birthday
-  ) {
-    let imageurl = null;
-    let respon = await uploadFile(req.body.image);
-    imageurl = respon.url;
-    let public_id = respon.public_id;
-
-    const register = await queryUserRegister({
-      name: req.body.name,
-      password: req.body.password,
-      email: req.body.email,
-      address: req.body.address,
-      phoneNumber: req.body.phone,
-      birthDay: req.body.birthday,
-      image: imageurl,
-      gender: req.body.gender,
-      admin: 0,
-    });
-    if (!register.code) {
-      return res.status(200).json(register);
-    } else {
-      await destroyFile(public_id);
-      return res.status(400).json(register);
-    }
-  } else {
-    return res.status(400).json({
-      message: "You should fill all field",
-      code: 5,
-    });
-  }
-};
-
 export const handleResAllPost = async (req, res) => {
   const allPost = await ApiAllpost();
   if (allPost.code) {

@@ -24,7 +24,6 @@ const InitRoute = (app) => {
 
   route
     .post("/api/v1/authlogin", handleLogin)
-    .post("/api/v1/register", handleRegister)
     .get("/api/v1/alluser", handleApiGetUser)
     .get("/api/v1/post", handleResAllPost)
     .get("/api/v1/statisticalgenres", handleStatisticalFollowGenre)

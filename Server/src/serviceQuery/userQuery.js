@@ -64,25 +64,6 @@ export let queryUserLogin = async (email, password) => {
   });
 };
 
-export let queryUserRegister = async (data) => {
-  return new Promise(async (resolve, reject) => {
-    let mail = await checkMail(data.email);
-    if (mail) {
-      resolve({ code: 2, message: "email is existed" });
-    } else {
-      db.User.create(data)
-        .then((data) => {
-          resolve({ code: 0, message: "ok" });
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    }
-  }).catch((err) => {
-    reject(err);
-  });
-};
-
 export let ApiCountUser = async () => {
   return new Promise((resolve, reject) => {
     db.User.count({
