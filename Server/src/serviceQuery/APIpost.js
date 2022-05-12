@@ -87,39 +87,17 @@ export const ApiNewArticle = async (data) => {
 
 export const ApiDeletePost = async (id) => {
   return new Promise(async (resolve, reject) => {
-    let data = await db.Post.findOne({
-      raw: true,
-      logging: false,
+    db.Post.destroy({
       where: {
         id: id,
       },
-    });
-    if (data) {
-      let public_id = data.public_id;
-      if(public_id && public_id?.indexOf(',') !== -1){
-      let arrayImage = public_id.split(",");
-      for (let i = 0; i < arrayImage.length - 1; i++) {
-        try {
-          await destroyFile(arrayImage[i]);
-        } catch (err) {
-          console.log(err);
-        }
-      }
-      }
-      db.Post.destroy({
-        where: {
-          id: id,
-        },
+    })
+      .then((data) => {
+        resolve({ message: "ok", code: 0 });
       })
-        .then((data) => {
-          resolve({ message: "ok", code: 0 });
-        })
-        .catch((err) => {
-          reject({ message: "fail", code: 1 });
-        });
-    } else {
-      reject({ message: "fail", code: 1 });
-    }
+      .catch((err) => {
+        reject({ message: "fail", code: 1 });
+      });
   });
 };
 
@@ -241,8 +219,8 @@ export const ApiCount7DayAgo = async () => {
       where: {
         validator: 1,
         createdAt: {
-          [Op.gte]:  moment().subtract(7, 'days').toDate(),
-          [Op.lt]:  moment().subtract(6, 'days').toDate()
+          [Op.gte]: moment().subtract(7, "days").toDate(),
+          [Op.lt]: moment().subtract(6, "days").toDate(),
         },
       },
     })
@@ -255,7 +233,7 @@ export const ApiCount7DayAgo = async () => {
 
 export const ApiCountPostFollowId = async (id) => {
   return new Promise((resolve, reject) => {
-    db.Post.findAll({ 
+    db.Post.findAll({
       where: {
         userId: id,
       },
@@ -264,16 +242,12 @@ export const ApiCountPostFollowId = async (id) => {
       attributes: [
         [sequelize.fn("COUNT", sequelize.col("validator")), "count"],
         [sequelize.col("validator"), "validator"],
-    ],
+      ],
       group: "validator",
     })
       .then((data) => resolve(data, { message: "ok", code: 0 }))
       .catch((err) => {
         reject(err, { message: err, code: 0 });
-      }
-    );
-  }
-  );
-}
-
-
+      });
+  });
+};

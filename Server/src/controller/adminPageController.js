@@ -19,13 +19,8 @@ import {
   ApiDeleteUser,
   ApiGetUser,
   queryUserLogin,
-  queryUserRegister,
 } from "../serviceQuery/userQuery";
-import {
-  handleMakeContent,
-  handleReadfile,
-  removeFileImage,
-} from "./defaultValue";
+import { handleMakeContent, removeFileImage } from "./defaultValue";
 
 export let handleLogin = async (req, res) => {
   if (req.body.email && req.body.password) {
@@ -74,35 +69,20 @@ export const handleYourPost = async (req, res) => {
 };
 export const handleNewPost = async (req, res) => {
   try {
-    let readData = await handleMakeContent(req.files.image, req.files.docx);
-
     const data = {
-      content: readData.content,
+      content: req.body.content,
       title: req.body.title,
       userId: req.body.userId,
       genresId: req.body.genresId,
-      public_id: readData.public_id,
+      public_id: "",
       like: 0,
       view: 0,
       validator: 0,
     };
     const newPost = await ApiNewArticle(data);
-    if (!newPost.code) {
-      return res.status(200).json({ message: "ok", statuscode: 0 });
-    } else {
-      readData.arrayImage.forEach(async (image) => {
-        await destroyFile(image.public_id);
-      });
-      return res
-        .status(400)
-        .json({ message: "fail insert data", statuscode: 1 });
-    }
+    res.status(200).json({ message: "ok", statuscode: 0 });
   } catch (err) {
-    return res.status(401).json({ message: err, statuscode: 2 });
-  } finally {
-    req?.files.image?.forEach((file) => {
-      removeFileImage(file.path);
-    });
+    return res.status(404).json({ message: err, statuscode: 2 });
   }
 };
 export const handleDeletePost = async (req, res) => {
@@ -122,120 +102,30 @@ export const handleEditPost = async (req, res) => {
   try {
     const postOriginal = await ApiOnePost(req.body.id);
     if (postOriginal) {
-      let dataNewPost;
-      if (req.files?.docx && req.files?.image) {
-        dataNewPost = await handleMakeContent(
-          req.files?.image,
-          req.files?.docx
-        );
-      } else {
-        if (req.files.image) {
-          let public_id = "";
-          let content = postOriginal.content;
-          let arrayImage = [];
-          if (req.files.image.length > 0) {
-            for (let i = 0; i < req.files.image.length; i++) {
-              let respon = await uploadFile(req.files.image[i].path);
-              arrayImage.push(respon.url);
-              public_id += respon.public_id + ",";
-            }
-          }
-          let first = 0;
-          for (let i = 0; i < arrayImage.length; i++) {
-            const index = content.indexOf("img src=", first) + 9;
-            const subdata = content.slice(index, content.indexOf('"', index));
-            if (index === 8) {
-              break;
-            }
-            content = content.replace(subdata, arrayImage[i]);
-            first = content.indexOf('"', index);
-          }
-          dataNewPost = { ...dataNewPost, public_id, content };
-        } else {
-          if (req.files.docx) {
-            let url = [];
-            let content = postOriginal.content;
-            let contentDocx = await handleReadfile(req.files.docx[0].path);
-            let first = 0;
-            while (true) {
-              const index = content.indexOf("img src=", first) + 9;
-              const subdata = content.slice(index, content.indexOf('"', index));
-              if (index === 8) {
-                break;
-              }
-              url.push(subdata);
-              first = content.indexOf('"', index);
-            }
-
-            for (let i = 0; i < url.length; i++) {
-              let index = contentDocx.indexOf("img");
-              if (index === -1) {
-                break;
-              }
-              contentDocx = contentDocx.replace(
-                "*img*",
-                `<img src="${url[i]}"></img>`
-              );
-            }
-            dataNewPost = { ...dataNewPost, content: contentDocx };
-          }
-        }
-      }
       const data = {
-        content: dataNewPost?.content
-          ? dataNewPost?.content
-          : postOriginal.content,
+        content: req.body.content ? req.body.content : postOriginal.content,
         title: req.body.title ? req.body.title : postOriginal.title,
         userId: postOriginal.userId,
         genresId: req.body.genresId
           ? +req.body.genresId
           : +postOriginal.genresId,
-        public_id: dataNewPost?.public_id
-          ? dataNewPost?.public_id
-          : postOriginal.public_id,
         like: postOriginal.like,
         view: postOriginal.view,
-        validator: postOriginal.validator,
+        validator: 0,
       };
       try {
         const respon = await ApiUpdatePost(req.body.id, data);
-        if (dataNewPost?.public_id ? true : false) {
-          postOriginal.public_id.split(",").forEach(async (image) => {
-            try {
-              await destroyFile(image);
-            } catch (err) {
-              console.log(err);
-            }
-          });
-        }
         return res.status(200).json({ message: "ok", statuscode: 0 });
       } catch {
-        if (!dataNewPost?.public_id) {
-          dataNewPost?.public_id.split(",").forEach(async (image) => {
-            try {
-              await destroyFile(image);
-            } catch (err) {
-              console.log(err);
-            }
-          });
-        }
         return res
           .status(400)
           .json({ message: "fail update data", statuscode: 1 });
       }
     } else {
-      return res
-        .status(401)
-        .json({ message: "fail update data", statuscode: 1 });
+      return res.status(404).json({ message: "not found file", statuscode: 1 });
     }
   } catch {
     return res.status(402).json({ message: "fail", statuscode: 1 });
-  } finally {
-    if (req?.files?.image?.length > 0) {
-      req?.files?.image?.forEach((file) => {
-        removeFileImage(file.path);
-      });
-    }
   }
 };
 
@@ -295,7 +185,7 @@ export const handleApiCountFollowId = async (req, res) => {
   }
 };
 export const handleApiDeleteUser = async (req, res) => {
-  try { 
+  try {
     const data = await ApiDeleteUser(req.query.id);
     return res.status(200).json({ message: "ok", statuscode: 0 });
   } catch {
@@ -310,4 +200,14 @@ export const handleApiGetUser = async (req, res) => {
   } catch {
     return res.status(401).json({ message: "fail", statuscode: 1 });
   }
-}
+};
+export const handUploadimage = async (req, res) => {
+  try {
+     const  data = await uploadFile(req.file.path)
+      return res.status(200).json({ message: "ok", statuscode: 0,data});
+  } catch {
+    return res.status(402).json({ message: "fail", statuscode: 1 });
+  }finally{
+    removeFileImage(req.file.path);
+  }
+};

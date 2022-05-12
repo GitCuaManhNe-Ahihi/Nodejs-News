@@ -5,7 +5,7 @@ import {
   handleEditPost, handleLogin,
   handleNewPost,
   handleRegister,
-  handleResAllPost, handleStatisticalFollowGenre, handleYourPost
+  handleResAllPost, handleStatisticalFollowGenre, handleYourPost, handUploadimage
 } from "../controller/adminPageController.js";
 import { homePage, postPage } from "../controller/homeController.js";
 const route = express.Router();
@@ -15,7 +15,7 @@ const upload = multer({
       cb(null, "./Server/src/files");
     },
     filename: (req, file, cb) => {
-      cb(null, file.originalname);
+      cb(null, Date.now()+file.originalname);
     },
   }),
 });
@@ -33,16 +33,12 @@ const InitRoute = (app) => {
     .post("/api/v1/yourpost", handleYourPost)
     .post(
       "/api/v1/newpost",
-      upload.fields([{ name: "image", maxCount: 10 }, { name: "docx" }]),
-      handleNewPost
-    )
+      handleNewPost)
+    .post("/api/v1/upload",upload.single('image'), handUploadimage)
     .delete("/api/v1/delete", handleDeletePost)
     .delete("/api/v1/user", handleApiDeleteUser)
     .put(
-      "/api/v1/change",
-      upload.fields([{ name: "image", maxCount: 10 }, { name: "docx" }]),
-      handleEditPost
-    )
+      "/api/v1/change",handleEditPost)
     .put("/api/v1/browse", handleBrowsePost);
 
   return app.use("/", route);
