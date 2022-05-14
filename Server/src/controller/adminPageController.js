@@ -10,41 +10,16 @@ import {
   ApiStatisticalPostFollowGenres,
   ApiStatisticalPostFollowMonth,
   ApiUpdatePost,
-  ApiYourPost,
+  ApiYourPost
 } from "../serviceQuery/APIpost";
-import { destroyFile, uploadFile } from "../serviceQuery/cloudinary";
+import { uploadFile } from "../serviceQuery/cloudinary";
 import {
   ApiCountUser,
   ApiCountUser7DaysAgo,
   ApiDeleteUser,
-  ApiGetUser,
-  queryUserLogin,
+  ApiGetUser
 } from "../serviceQuery/userQuery";
-import { handleMakeContent, removeFileImage } from "./defaultValue";
-
-export let handleLogin = async (req, res) => {
-  if (req.body.email && req.body.password) {
-    const users = await queryUserLogin(req.body.email, req.body.password);
-    if (!users.code) {
-      let { tokenrefresh, ...other } = users;
-      res.cookie("tokenrefresh", tokenrefresh, {
-        httpOnly: true,
-        secure: false,
-        path: "/",
-        sameSide: "strict",
-        maxAge: 1000 * 60 * 60 * 24 * 7,
-      });
-      return res.status(200).json(other);
-    } else {
-      return res.status(404).json({ message: users.message, code: users.code });
-    }
-  } else {
-    return res.status(404).json({
-      message: "You should input email and password",
-      code: 5,
-    });
-  }
-};
+import { removeFileImage } from "./defaultValue";
 export const handleResAllPost = async (req, res) => {
   const allPost = await ApiAllpost();
   if (allPost.code) {
@@ -211,3 +186,5 @@ export const handUploadimage = async (req, res) => {
     removeFileImage(req.file.path);
   }
 };
+
+

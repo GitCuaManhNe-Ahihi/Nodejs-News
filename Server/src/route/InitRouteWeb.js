@@ -1,12 +1,21 @@
 import express from "express";
 import multer from "multer";
 import {
-  handleApiCount, handleApiCountFollowId, handleApiDeleteUser, handleApiGetUser, handleApiStatisticalPostFollowMonth, handleBrowsePost, handleDeletePost,
-  handleEditPost, handleLogin,
+  handleApiCount,
+  handleApiCountFollowId,
+  handleApiDeleteUser,
+  handleApiGetUser,
+  handleApiStatisticalPostFollowMonth,
+  handleBrowsePost,
+  handleDeletePost,
+  handleEditPost,
   handleNewPost,
-  handleRegister,
-  handleResAllPost, handleStatisticalFollowGenre, handleYourPost, handUploadimage
+  handleResAllPost,
+  handleStatisticalFollowGenre,
+  handleYourPost,
+  handUploadimage
 } from "../controller/adminPageController.js";
+import { handleCheckToken, handleLogin } from "../controller/authController.js";
 import { homePage, postPage } from "../controller/homeController.js";
 const route = express.Router();
 const upload = multer({
@@ -15,7 +24,7 @@ const upload = multer({
       cb(null, "./Server/src/files");
     },
     filename: (req, file, cb) => {
-      cb(null, Date.now()+file.originalname);
+      cb(null, Date.now() + file.originalname);
     },
   }),
 });
@@ -24,6 +33,7 @@ const InitRoute = (app) => {
 
   route
     .post("/api/v1/authlogin", handleLogin)
+    .post("/api/v1/authtoken", handleCheckToken)
     .get("/api/v1/alluser", handleApiGetUser)
     .get("/api/v1/post", handleResAllPost)
     .get("/api/v1/statisticalgenres", handleStatisticalFollowGenre)
@@ -31,16 +41,13 @@ const InitRoute = (app) => {
     .get("/api/v1/count", handleApiCount)
     .get("/api/v1/countpostid", handleApiCountFollowId)
     .post("/api/v1/yourpost", handleYourPost)
-    .post(
-      "/api/v1/newpost",
-      handleNewPost)
-    .post("/api/v1/upload",upload.single('image'), handUploadimage)
+    .post("/api/v1/newpost", handleNewPost)
+    .post("/api/v1/upload", upload.single("image"), handUploadimage)
     .delete("/api/v1/delete", handleDeletePost)
     .delete("/api/v1/user", handleApiDeleteUser)
-    .put(
-      "/api/v1/change",handleEditPost)
+    .put("/api/v1/change", handleEditPost)
     .put("/api/v1/browse", handleBrowsePost);
 
-  return app.use("/", route);
+  return app.use(route);
 };
 export default InitRoute;

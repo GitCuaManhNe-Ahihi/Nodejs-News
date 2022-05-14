@@ -34,8 +34,8 @@ app.use(function (req, res, next) {
   next();
 });
 app.use(cookieParser());
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+app.use(bodyParser.json({ limit: "100mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
 configViewEngineApp(app);
 InitRoute(app);
 

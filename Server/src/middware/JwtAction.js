@@ -40,6 +40,6 @@ export const decodeJwt = (token) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     return decoded;
   } catch (err) {
-    console.log(err);
+    return 0
   }
 };
