@@ -12,23 +12,18 @@ import {
   ApiUpdatePost,
   ApiYourPost
 } from "../serviceQuery/APIpost";
-import { uploadFile } from "../serviceQuery/cloudinary";
-import {
-  ApiCountUser,
-  ApiCountUser7DaysAgo,
-  ApiDeleteUser,
-  ApiGetUser
-} from "../serviceQuery/userQuery";
-import { removeFileImage } from "./defaultValue";
-export const handleResAllPost = async (req, res) => {
+import { ApiDeleteUser, ApiGetUser } from "../serviceQuery/userQuery";
+const createError = require("http-errors");
+export const handleResAllPost = async (req, res, next) => {
   const allPost = await ApiAllpost();
   if (allPost.code) {
-    return res.status(404).json(allPost);
+    return next(createError(404, "Not Found"));
   } else {
     return res.status(200).json(allPost);
   }
 };
-export const handleYourPost = async (req, res) => {
+
+export const handleYourPost = async (req, res, next) => {
   if (req.body.id) {
     try {
       const yourpost = await ApiYourPost(req.body.id);
@@ -36,155 +31,161 @@ export const handleYourPost = async (req, res) => {
         .status(200)
         .json({ data: yourpost, statuscode: 0, message: "ok" });
     } catch (err) {
-      return res.status(400).json({ message: err, statuscode: 1 });
+      return next(createError(404, "Not Found Post"));
     }
   } else {
-    return res.status(400).json({ message: ">>>>", statuscode: 2 });
+    return next(createError(400, "Bad Request"));
   }
 };
-export const handleNewPost = async (req, res) => {
+
+export const handleNewPost = async (req, res, next) => {
   try {
-    const data = {
-      content: req.body.content,
-      title: req.body.title,
-      userId: req.body.userId,
-      genresId: req.body.genresId,
-      public_id: "",
-      like: 0,
-      view: 0,
-      validator: 0,
-    };
-    const newPost = await ApiNewArticle(data);
-    res.status(200).json({ message: "ok", statuscode: 0 });
-  } catch (err) {
-    return res.status(404).json({ message: err, statuscode: 2 });
-  }
-};
-export const handleDeletePost = async (req, res) => {
-  try {
-    ApiDeletePost(req.query.id).then((data) => {
-      if (data.code) {
-        return res.status(404).json(data);
-      } else {
-        return res.status(200).json({ message: "ok", statuscode: 0 });
+    if (
+      req.body.content &&
+      req.body.title &&
+      req.body.userId &&
+      req.body.genresId
+    ) {
+      const data = {
+        content: req.body.content,
+        title: req.body.title,
+        userId: req.body.userId,
+        genresId: req.body.genresId,
+        public_id: req.body.public_id,
+        like: 0,
+        view: 0,
+        validator: 0,
+      };
+      try {
+        const newPost = await ApiNewArticle(data);
+        res.status(201).json({ message: "ok", statuscode: 0 });
+      } catch {
+        return next(createError(406, "Not Acceptable"));
       }
-    });
+    } else {
+      return next(createError(406, "Not Acceptable"));
+    }
   } catch (err) {
-    return res.status(400).json({ message: err, statuscode: 1 });
+    return next(createError(400, "Bad Request"));
   }
 };
-export const handleEditPost = async (req, res) => {
+
+export const handleDeletePost = async (req, res, next) => {
   try {
-    const postOriginal = await ApiOnePost(req.body.id);
+    ApiDeletePost(req.query.id)
+      .then((data) => {
+        return res.status(204).json({ message: "ok", statuscode: 0 });
+      })
+      .catch((err) => {
+        return next(createError(404, "Not Found Post"));
+      });
+  } catch (err) {
+    next(createError(404, "Not Found Post"));
+  }
+};
+
+export const handleEditPost = async (req, res, next) => {
+  try {
+    const id = req.body.id;
+    let postOriginal = await ApiOnePost(id);
     if (postOriginal) {
       const data = {
         content: req.body.content ? req.body.content : postOriginal.content,
         title: req.body.title ? req.body.title : postOriginal.title,
-        userId: postOriginal.userId,
         genresId: req.body.genresId
           ? +req.body.genresId
           : +postOriginal.genresId,
-        like: postOriginal.like,
-        view: postOriginal.view,
         validator: 0,
       };
       try {
-        const respon = await ApiUpdatePost(req.body.id, data);
-        return res.status(200).json({ message: "ok", statuscode: 0 });
+        await ApiUpdatePost(id, data);
+        return res.status(201).json({ message: "ok", statuscode: 0 });
       } catch {
-        return res
-          .status(400)
-          .json({ message: "fail update data", statuscode: 1 });
+        return next(createError(406, "Not Acceptable"));
       }
     } else {
-      return res.status(404).json({ message: "not found file", statuscode: 1 });
+      return next(createError(404, "Not Found Post"));
     }
   } catch {
-    return res.status(402).json({ message: "fail", statuscode: 1 });
+    return next(createError(400, "Bad Request"));
   }
 };
 
-export const handleBrowsePost = async (req, res) => {
+export const handleBrowsePost = async (req, res, next) => {
   try {
-    const data = await ApiBrowsePost(req.body.id, req.body.validator);
-    return res.status(200).json({
+    await ApiBrowsePost(req.body.id, req.body.validator);
+    return res.status(201).json({
       message: "ok",
-
       statuscode: 0,
     });
   } catch {
-    return res.status(401).json({ message: "fail", statuscode: 1 });
+    return next(createError(404, "Not Found Post"));
   }
 };
 
-export const handleStatisticalFollowGenre = async (req, res) => {
+export const handleStatisticalFollowGenre = async (req, res, next) => {
   try {
     const data = await ApiStatisticalPostFollowGenres();
     return res.status(200).json(data);
   } catch {
-    return res.status(401).json({ message: "fail", statuscode: 1 });
+    return next(createError(400, "Bad Request"));
   }
 };
-export const handleApiStatisticalPostFollowMonth = async (req, res) => {
+
+export const handleApiStatisticalPostFollowMonth = async (req, res, next) => {
   try {
     const data = await ApiStatisticalPostFollowMonth();
     return res.status(200).json(data);
   } catch {
-    return res.status(401).json({ message: "fail", statuscode: 1 });
+    return next(createError(400, "Bad Request"));
   }
 };
-export const handleApiCount = async (req, res) => {
+
+export const handleApiCount = async (req, res, next) => {
   try {
     const datapost = await ApiCountPost();
     const datapost7daysago = await ApiCount7DayAgo();
-    const datauser = await ApiCountUser();
-    const datauser7daysago = await ApiCountUser7DaysAgo();
     return res.status(200).json({
       datapost,
       datapost7daysago,
-      datauser,
-      datauser7daysago,
     });
   } catch {
-    return res.status(401).json({ message: "fail", statuscode: 1 });
+    return next(createError(400, "Bad Request"));
   }
 };
 
-export const handleApiCountFollowId = async (req, res) => {
+export const handleApiCountFollowId = async (req, res, next) => {
   try {
     let id = req.query.id;
     const data = await ApiCountPostFollowId(id);
-    return res.status(200).json(data);
+    if (data) {
+      return res.status(200).json(data);
+    } else {
+      return next(createError(404, "Not Found Post"));
+    }
   } catch {
-    return res.status(401).json({ message: "fail", statuscode: 1 });
-  }
-};
-export const handleApiDeleteUser = async (req, res) => {
-  try {
-    const data = await ApiDeleteUser(req.query.id);
-    return res.status(200).json({ message: "ok", statuscode: 0 });
-  } catch {
-    return res.status(401).json({ message: "fail", statuscode: 1 });
+    return next(createError(400, "Bad Request"));
   }
 };
 
-export const handleApiGetUser = async (req, res) => {
+export const handleApiDeleteUser = async (req, res, next) => {
+  try {
+    try {
+      await ApiDeleteUser(req.query.id);
+      return res.status(204).json({ message: "ok", statuscode: 0 });
+    } catch {
+      return next(createError(404, "Not Found User"));
+    }
+  } catch {
+    return next(createError(400, "Bad Request"));
+  }
+};
+
+export const handleApiGetUser = async (req, res, next) => {
   try {
     const data = await ApiGetUser();
     return res.status(200).json(data);
   } catch {
-    return res.status(401).json({ message: "fail", statuscode: 1 });
+    return next(createError(400, "Bad Request"));
   }
 };
-export const handUploadimage = async (req, res) => {
-  try {
-     const  data = await uploadFile(req.file.path)
-      return res.status(200).json({ message: "ok", statuscode: 0,data});
-  } catch {
-    return res.status(402).json({ message: "fail", statuscode: 1 });
-  }finally{
-    removeFileImage(req.file.path);
-  }
-};
-
-

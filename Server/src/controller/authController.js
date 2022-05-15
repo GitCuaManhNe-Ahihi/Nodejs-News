@@ -1,11 +1,15 @@
 import { decodeJwt } from "../middware/JwtAction";
 import { queryUserLogin } from "../serviceQuery/userQuery";
+const createError = require("http-errors");
 
-export let handleLogin = async (req, res) => {
+
+
+export let handleLogin = async (req, res,next) => {
   if (req.body.email && req.body.password) {
     const users = await queryUserLogin(req.body.email, req.body.password);
     if (!users.code) {
-      let { tokenrefresh, ...other } = users;
+      let { tokenrefresh,tokenaccess} = users;
+      res.setHeader("Authorization", tokenaccess);
       res.cookie("tokenrefresh", tokenrefresh, {
         httpOnly: true,
         secure: false,
@@ -13,28 +17,28 @@ export let handleLogin = async (req, res) => {
         sameSide: "strict",
         maxAge: 1000 * 60 * 60 * 24 * 7,
       });
-      return res.status(200).json(other);
+     
+      return  res.status(201).json({message:"ok",statuscode:0});
     } else {
-      return res.status(404).json({ message: users.message, code: users.code });
+      return next(createError(404, "Account or Password is incorrect"));
     }
   } else {
-    return res.status(404).json({
-      message: "You should input email and password",
-      code: 5,
-    });
+    return next(createError(400, "You should input email and password"));
   }
 };
 
-export let handleCheckToken = async (req, res) => {
+
+
+export let handleCheckToken = async (req, res,next) => {
   try {
-    const accessToken = req.body.accesstoken
-    const info = decodeJwt(accessToken);
+    const accessToken = req.headers.authorization;
+    const info = decodeJwt(accessToken.split(" ")[1]);
     if (info) {
       return res.status(200).json({ message: info.message, info });
     } else {
-      return res.status(200).json({ message: "error", code: 1 });
+      return next(createError(403, "Token is invalid"));
     }
   } catch (err) {
-    return res.status(400).json({ code: 2, message: "err" });
+    return next(createError(400, "Bad Request"));
   }
 };
