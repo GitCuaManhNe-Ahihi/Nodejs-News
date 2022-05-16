@@ -1,86 +1,121 @@
+<% for(var i = 0; i < genres.length; i++) { %> <% var post_of_genres =
+posts.filter(item => item['genres.name']==genres[i])%> <%
+if(post_of_genres.length > 0){ %>
 <div class="news" id="tin360">
-    <div class="content_inner">
-        <h3 class="news_heading padding-20">
-            <a href="#" class="visted--none">
-                <i class="fa-solid fa-atom icon_heading"></i>tin nhanh 360°
-            </a>
-        </h3>
-        <div class="grid-container-2">
-            <article  class="grid-item tin360-l">
-                <div class="grid-container-1">
-                    <div class="grid-item">
-                        <article class="story story--primary">
-                            <a href="#" class="story__thumb--img">
-                                <img src="./assests/img/story-1.jpg" alt="anh story" class="story__thumb_img">
-                            </a>
-                            <div class="story__thumb--text">
-                                <h1 class="story__thumb-text"><a href="#">Nguyễn Hồng Nhung nóng bỏng trong ngày lên chức phó chủ tịch hội đồng quản trị</a></h1>
-                                <div class="story__thumb_info">
-                                    <div class="story__thumb_time">09:18 16/02/2022</div>
-                                    <div class="story_thumb_dash"> - </div>
-                                    <div class="story__thumb_cmt">
-                                        <span class="far fa-comment-dots"></span>
-                                        <span>0</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="icon__play"><i class="fas fa-play-circle"></i></span>
-                        </article>
-                    </div>
+  <div class="content_inner">
+    <h3 class="news_heading padding-20">
+      <a href="#" class="visted--none">
+        <i class="fa-solid fa-atom icon_heading"></i><%= genres[i] %>
+      </a>
+    </h3>
+    <div class="grid-container-2">
+      <article class="grid-item tin360-l">
+        <div class="grid-container-1">
+          <div class="grid-item">
+            <% var index2, lastindex2,length_ %> <% length_ =
+            post_of_genres.length
+            >2?post_of_genres.length-2:post_of_genres.length %> <% for(var j =
+            0; j < length_; j++) { %> <% index2=
+            post_of_genres[j].content.indexOf("http://res.cloudinary.com/")%> <%
+            lastindex2 =post_of_genres[j].content.indexOf("\"", index2) %> <%
+            const image =post_of_genres[j].content.slice(index2,lastindex2)%>
+            <article class="story story--primary">
+              <a
+                href="/post?id=<%=post_of_genres[j].id %>"
+                class="story__thumb--img"
+              >
+                <img
+                  src="<%= image%>"
+                  alt="anh story"
+                  class="story__thumb_img"
+                />
+              </a>
+              <div class="story__thumb--text">
+                <h1 class="story__thumb-text">
+                  <a href="/post?id=<%=post_of_genres[j].id %>"
+                    ><%= post_of_genres[j].title%>
+                  </a>
+                </h1>
+                <div class="story__thumb_info">
+                  <div class="story__thumb_time"></div>
+                  <div class="story_thumb_dash">-</div>
+                  <div class="story__thumb_cmt">
+                    <span class="far fa-comment-dots"></span>
+                    <span>0</span>
+                  </div>
                 </div>
+              </div>
+              <span class="icon__play"><i class="fas fa-play-circle"></i></span>
             </article>
-            <article  class="grid-item tin360-r">
-                <article class="story story-3-rowLeft">
-                    <a href="#" class="story__thumb--img">
-                        <img src="./assests/img/strory-2.jpeg" alt="anh story" class="story__thumb_img">
-                    </a>
-                    <div class="story__thumb--text">
-                        <h1 class="story__thumb-text"><a href="#">Tuyển U.23 Việt Nam có thể xách vali về nước khi chưa đá trận nào</a></h1>
-                        <div class="story__thumb_info">
-                            <div class="story__thumb_time">8 giờ trước</div>
-                            <div class="story_thumb_dash"> - </div>
-                            <div class="story__thumb_cmt">
-                                <span class="far fa-comment-dots"></span>
-                                <span>0</span>
-                            </div>
-                            <a href="#" class="story__thumb_hastag">
-                                #U.23 Việt Nam
-                            </a>
-                        </div>
-                    </div>
-                    <ul class="story__related">
-                        <li>
-                            <i class="fa-solid fa-angle-right icon-list"></i>
-                            <a href="#">10 thói quen của những người khỏe mạnh, bạn được thói quen nào?</a>
-                        </li>
-                    </ul>
-                </article>
-                <article class="story story-2-rowLeft">
-                    <a href="#" class="story__thumb--img">
-                        <img src="./assests/img/story-3.jpg" alt="anh story" class="story__thumb_img">
-                    </a>
-                    <div class="story__thumb--text">
-                        <h1 class="story__thumb-text"><a href="#"> Trên 60 tuổi? Đây là cách để sống thọ hơn hàng chục tuổi</a></h1>
-                        <div class="story__thumb_info">
-                            <div class="story__thumb_time">8 giờ trước</div>
-                            <div class="story_thumb_dash"> - </div>
-                            <div class="story__thumb_cmt">
-                                <span class="far fa-comment-dots"></span>
-                                <span>0</span>
-                            </div>
-                            <a href="#" class="story__thumb_hastag">
-                                #U.23 Việt Nam
-                            </a>
-                        </div>
-                    </div>
-                    <ul class="story__related">
-                        <li>
-                            <i class="fa-solid fa-angle-right icon-list"></i>
-                            <a href="#">10 thói quen của những người khỏe mạnh, bạn được thói quen nào?</a>
-                        </li>
-                    </ul>
-                </article>
-            </article>
+            <% } %>
+          </div>
         </div>
+      </article>
+      <% if(post_of_genres.length >= 3){ %> <% var index, lastindex; %> <%
+      index=
+      post_of_genres[post_of_genres.length-2].content.indexOf("http://res.cloudinary.com/")%>
+      <% lastindex
+      =post_of_genres[post_of_genres.length-2].content.indexOf("\"", index) %>
+      <% const image
+      =post_of_genres[post_of_genres.length-2].content.slice(index,lastindex)%>
+      <article class="grid-item tin360-r">
+        <article class="story story-3-rowLeft">
+          <a
+            href="/post?id=<%=post_of_genres[post_of_genres.length-2].id%>"
+            class="story__thumb--img"
+          >
+            <img src="<%= image%>" alt="anh story" class="story__thumb_img" />
+          </a>
+          <div class="story__thumb--text">
+            <h1 class="story__thumb-text">
+              <a href="/post?id=<%=post_of_genres[post_of_genres.length-2].id%>"
+                ><%= post_of_genres[post_of_genres.length-2].title%></a
+              >
+            </h1>
+            <div class="story__thumb_info">
+              <div class="story__thumb_time"></div>
+              <div class="story_thumb_dash">-</div>
+              <div class="story__thumb_cmt">
+                <span class="far fa-comment-dots"></span>
+                <span>0</span>
+              </div>
+            </div>
+          </div>
+        </article>
+        <% index=
+        post_of_genres[post_of_genres.length-1].content.indexOf("http://res.cloudinary.com/")%>
+        <% lastindex
+        =post_of_genres[post_of_genres.length-1].content.indexOf("\"", index) %>
+        <% const image2
+        =post_of_genres[post_of_genres.length-1].content.slice(index,lastindex)%>
+        <article class="story story-2-rowLeft">
+          <a
+            href="/post?id=<%=post_of_genres[post_of_genres.length-1].id%>"
+            class="story__thumb--img"
+          >
+            <img src="<%= image2%>" alt="anh story" class="story__thumb_img" />
+          </a>
+          <div class="story__thumb--text">
+            <h1 class="story__thumb-text">
+              <a
+                href="/post?id=<%=post_of_genres[post_of_genres.length-1].id%>"
+              >
+                <%= post_of_genres[post_of_genres.length-1].title%></a
+              >
+            </h1>
+            <div class="story__thumb_info">
+              <div class="story__thumb_time"></div>
+              <div class="story_thumb_dash">-</div>
+              <div class="story__thumb_cmt">
+                <span class="far fa-comment-dots"></span>
+                <span>0</span>
+              </div>
+            </div>
+          </div>
+        </article>
+        <% } %>
+      </article>
     </div>
+  </div>
 </div>
+<% } %> <% } %>

@@ -8,7 +8,7 @@
             <% neartime.map(item =>{ %>
             <div class="tab_content_text">
                 <div class="tab_text_time"><%=item.createdAt.getHours()%>:<%=item.createdAt.getMinutes()%></div>
-                <a href="/post?id=<%item.id%>">
+                <a href="/post?id=<%=item.id%>">
                     <div class="tab_text_inner">
                         <%= item.title %>
                     </div>

@@ -9,7 +9,7 @@ import ConnectDB from "./config/connectDB.js";
 import configViewEngineApp from "./config/viewEngine.js";
 import { LogEvent, streamMorgan } from "./Helper/index.js";
 import InitAPI from "./route/InitAPIWeb.js";
-import InitRoute from "./route/InitAPIWeb.js";
+import InitRouteWeb from "./route/Route.Ejs.js";
 const createError = require("http-errors");
 
 dotenv.config();
@@ -18,7 +18,13 @@ const app = express();
 app.use(
   cors()
 );
-app.use(helmet()); // Helmet helps you secure your Express apps by setting various HTTP headers.
+app.use(
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: false,
+  }),
+) 
+//app.use(helmet()); // Helmet helps you secure your Express apps by setting various HTTP headers.
 app.use(
   morgan(
     `combined:remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms`,
@@ -30,7 +36,7 @@ app.use(
 app.use(function (req, res, next) {
   // Website you wish to allow to connect
   res.setHeader("Access-Control-Allow-Origin", process.env.URL_REACT);
-    
+  
   // Request methods you wish to allow
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -53,8 +59,8 @@ app.use(cookieParser());
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
 configViewEngineApp(app);
-InitRoute(app);
 InitAPI(app);
+InitRouteWeb(app)
 app.use((req, res, next) => next(createError(404, "Not Found")));
 app.use((err, req, res, next) => {
   res.status(err.status || 500);

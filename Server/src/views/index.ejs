@@ -1,70 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Báo chí</title>
-    <link rel="stylesheet" href="./assests/css/grid.css">
-    <link rel="stylesheet" href="./assests/css/index.css">
+    <link rel="stylesheet" href="./assests/css/grid.css" />
+    <link rel="stylesheet" href="./assests/css/index.css" />
     <!-- font awesome  -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
 
-</head>
-<body>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <%- include('header', {headerBottom: headerBottom}); %>
     <div class="content">
-        <div class="content_inner">
-            <div class="grid">
-                <div class="row">
-                    <%- include('trending') %>
-                </div>
-            </div>
-            <div class="grid widget">
-                <div class="row">
-                    <div class="col-66 l-content">
-                        <a href="/post?id=<%=story.id%>">
-                            <article class="story">
-                                <div class="story__thumb--img">
-                                    <img src= "<%=image %>" alt="anh story" class="story__thumb_img">
-                                    <span class="icon__play story_icon"><i class="fas fa-play-circle"></i></span>
-                                </div>
-                                <div class="story__thumb--text">
-                                    <h1 class="story__thumb-text"><a href="#"> <%= story.title%> </a></h1>
-                                    <div class="story__thumb_info">
-                                        <div class="story__thumb_time"><%=timeofStory%></div>
-                                        <div class="story_thumb_dash"> - </div>
-                                        <div class="story__thumb_cmt">
-                                            <span class="far fa-comment-dots"></span>
-                                            <span>0</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
-                        </a>
-                        <div class="grid grid-l">
-                            <%- include('rowcontent') %>
-                        </div>
-                    </div>
-                    <div class="col-33 r-content">
-                        <%- include('content_tab',{neartime:neartime}) %>
-                    </div>
-                </div>
-            </div>
+      <div class="content_inner">
+        <div class="grid">
+          <div class="row"><%- include('trending') %></div>
         </div>
-        <%- include('news_24h',{post24h}) %>
-        <%- include('article_section') %>
+        <div class="grid widget">
+          <div class="row">
+            <div class="col-66 l-content">
+              <a href="/post?id=<%=story.id%>">
+                <article class="story">
+                  <div class="story__thumb--img_main">
+                    <img
+                      src="<%=image %>"
+                      alt="anh story"
+                      class="story__thumb_img_main"
+                    />
+                    <span class="icon__play story_icon"
+                      ><i class="fas fa-play-circle"></i
+                    ></span>
+                  </div>
+                  <div class="story__thumb--text">
+                    <h1 class="story__thumb-text">
+                      <a href="#"> <%= story.title%> </a>
+                    </h1>
+                    <div class="story__thumb_info">
+                      <div class="story__thumb_time"><%=timeofStory%></div>
+                      <div class="story_thumb_dash">-</div>
+                      <div class="story__thumb_cmt">
+                        <span class="far fa-comment-dots"></span>
+                        <span>0</span>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </a>
+              <div class="grid grid-l"><%- include('rowcontent') %></div>
+            </div>
+            <div class="col-33 r-content">
+              <%- include('content_tab',{neartime:neartime}) %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%- include('news_24h',{post24h});%> 
+      <%- include('article_section',{genres:genres_,posts:afterpost});%>
     </div>
     <%- include('footer'); %>
     <a class="go-up" href="#">
-        <i class="fa-solid fa-angle-up"></i>
+      <i class="fa-solid fa-angle-up"></i>
     </a>
     <script src="./assests/js/index.js"></script>
-</body>
+  </body>
 </html>

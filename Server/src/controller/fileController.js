@@ -1,5 +1,5 @@
 import { destroyFile, uploadFile } from "../serviceQuery/cloudinary";
-import { removeFileImage } from "./defaultValue";
+import { removeFileImage } from "../Helper/index.js";
 const createError = require("http-errors");
 export const handleimageDestroy = async(req, res, next) => {
   try {
