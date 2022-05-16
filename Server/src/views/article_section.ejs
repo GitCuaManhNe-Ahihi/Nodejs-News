@@ -1,3 +1,39 @@
+<% 
+var formatTIME = function(date)
+{
+    var d = new Date()
+    var currentTime = d.getTime() - date;
+    var time = "";
+    if(currentTime < 60000)
+    {
+        time = "Vừa xong";
+    }
+    else if(currentTime < 3600000)
+    {
+        time = Math.floor(currentTime/60000) + " phút trước";
+    }
+    else if(currentTime < 86400000)
+    {
+        time = Math.floor(currentTime/3600000) + " giờ trước";
+    }
+    else if(currentTime < 604800000)
+    {
+        time = Math.floor(currentTime/86400000) + " ngày trước";
+    }
+    else if(currentTime < 2628000000)
+    {
+        time = Math.floor(currentTime/604800000) + " tuần trước";
+    }
+    else
+    {
+        time = date.getHour()+":"+date.getMinutes()+" "+date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    }
+
+    return time;
+}
+
+%>
+
 <% for(var i = 0; i < genres.length; i++) { %> <% var post_of_genres =
 posts.filter(item => item['genres.name']==genres[i])%> <%
 if(post_of_genres.length > 0){ %>
@@ -37,7 +73,7 @@ if(post_of_genres.length > 0){ %>
                   </a>
                 </h1>
                 <div class="story__thumb_info">
-                  <div class="story__thumb_time"></div>
+                  <div class="story__thumb_time"><%= formatTIME(post_of_genres[j].createdAt) %> </div>
                   <div class="story_thumb_dash">-</div>
                   <div class="story__thumb_cmt">
                     <span class="far fa-comment-dots"></span>
@@ -73,7 +109,7 @@ if(post_of_genres.length > 0){ %>
               >
             </h1>
             <div class="story__thumb_info">
-              <div class="story__thumb_time"></div>
+              <div class="story__thumb_time"><%= formatTIME(post_of_genres[post_of_genres.length-2].createdAt) %> </div>
               <div class="story_thumb_dash">-</div>
               <div class="story__thumb_cmt">
                 <span class="far fa-comment-dots"></span>
@@ -104,7 +140,7 @@ if(post_of_genres.length > 0){ %>
               >
             </h1>
             <div class="story__thumb_info">
-              <div class="story__thumb_time"></div>
+              <div class="story__thumb_time"><%= formatTIME(post_of_genres[post_of_genres.length-1].createdAt) %> </div>
               <div class="story_thumb_dash">-</div>
               <div class="story__thumb_cmt">
                 <span class="far fa-comment-dots"></span>
