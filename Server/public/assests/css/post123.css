@@ -30,7 +30,6 @@
     padding: 20px;
     font-family: var(--groupFont_second);
     font-size: 14px;
-    opacity: 0.8;
 }
 .post_heading {
     font-size: 36px;
@@ -338,8 +337,9 @@ span.colorPri{
 #main img{
     width: 680px;
     margin: auto;
-    height: 300px;
+    height: 500px;
     display: block;
+    object-fit: cover;
 }
 #main h1,h2,h3
 {

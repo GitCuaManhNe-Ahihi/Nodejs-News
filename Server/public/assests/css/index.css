@@ -895,7 +895,7 @@ span.icon__play {
 }
 .tin360-l img {
   width: 100px;
-  obejct-fit: cover;
+  object-fit: cover;
 }
 .tin360-r {
   width: 50%;
@@ -905,6 +905,11 @@ span.icon__play {
 }
 .story-3-rowLeft .story__related {
   display: none;
+}
+.story__thumb_top--img img{
+  width: 100%;
+  height: 80%;
+  object-fit: cover;
 }
 .tin360-r .story-2-rowLeft {
   height: 195px;
@@ -918,8 +923,14 @@ span.icon__play {
   font-size: 12px;
   padding-left: 10px;
 }
-.tin360-r .story__thumb--img:hover {
+.tin360-r img:hover {
   opacity: 0.8;
+}
+.story__thumb_bottom--img img
+{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .story__thumb_hastag {
   font-size: 13px;

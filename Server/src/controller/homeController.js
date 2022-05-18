@@ -8,11 +8,7 @@ import {
 import { formatDate } from "../Helper/index.js";
 
 export let homePage = async (req, res) => {
-  const users = QueryAllpost();
-  const genres = getAllGenres();
-  const neartime_ = PostNearTime();
-  const post24h_ = post24H();
-  Promise.all([users, genres, neartime_, post24h_])
+  await Promise.all([QueryAllpost(), QueryAllpost(), PostNearTime(), post24H()])
     .then((values) => {
       if (values[0].length > 0) {
         const story = values[0].slice(0, 1)[0];
@@ -25,15 +21,20 @@ export let homePage = async (req, res) => {
           Math.floor(new Date() - story.createdAt),
           story.createdAt
         );
-        const neartime = values[2].length > 0
-        ? values[2].filter((item) => item.id !== story.id)
-        : [];
+        const neartime =
+          values[2].length > 0
+            ? values[2].filter((item) => item.id !== story.id)
+            : [];
 
         let post_24h =
           values[3].length > 0
-            ? values[3].filter((item) => item.id !== story.id && JSON.stringify(neartime).indexOf(`"id":${item.id}`) === -1)
+            ? values[3].filter(
+                (item) =>
+                  item.id !== story.id &&
+                  JSON.stringify(neartime).indexOf(`"id":${item.id}`) === -1
+              )
             : [];
-        post_24h=post_24h.slice(0, 4);
+        post_24h = post_24h.slice(0, 4);
         const headerBottom =
           values[1].length > 0
             ? values[1].map((item) => {
@@ -41,7 +42,10 @@ export let homePage = async (req, res) => {
               })
             : [];
         let afterpost = [...values[0].slice(1, values[0].length)].filter(
-          (item) => item.id !== story.id && JSON.stringify(post_24h).indexOf(`"id":${item.id}`) === -1 && JSON.stringify(neartime).indexOf(`"id":${item.id}`) === -1
+          (item) =>
+            item.id !== story.id &&
+            JSON.stringify(post_24h).indexOf(`"id":${item.id}`) === -1 &&
+            JSON.stringify(neartime).indexOf(`"id":${item.id}`) === -1
         );
         const genres = new Set(afterpost.map((item) => item["genres.name"]));
         const genres_ = Array.from(genres);
@@ -66,10 +70,7 @@ export let homePage = async (req, res) => {
 };
 export let postPage = async (req, res) => {
   const id = req.query.id;
-  const posts_ = PostFollowId(id);
-  const genres = getAllGenres();
-  const neartime_ = PostNearTime();
-  Promise.all([posts_, neartime_, genres])
+ await Promise.all([PostFollowId(id), getAllGenres(),  PostNearTime()])
     .then((values) => {
       if (values[0]) {
         const post = values[0].slice(0, 1)[0];
@@ -87,7 +88,7 @@ export let postPage = async (req, res) => {
         return res.render("./detail_post/post_detail.ejs", {
           headerBottom,
           post,
-          neartime: values[1],
+          neartime: values[2],
           dataHTML,
           timeofPost,
         });

@@ -1,4 +1,4 @@
 
-//POST   http://localhost:6887/api/v1/article/new
 
-GET http://localhost:6887/
+POST https://analyticsdata.googleapis.com/v1beta/properties/AAAA0JQKWBQ:APA91bF4Fr41Hpf9pXA48v7GEXdDdjaJCVRun2b8tphD22mdHrIk8YSLxOV36aasbOH9N9LW3hxbD7ypo1EgURKy0vC2FBygOddYUHK8R9d04sIcyP38mH7-7GJpMwhssSMRKpM91o0E:runReport
+  

@@ -16,7 +16,7 @@ dotenv.config();
 
 const app = express();
 app.use(
-  cors()
+  cors({origin:true})
 );
 app.use(
   helmet({

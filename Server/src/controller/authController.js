@@ -1,14 +1,13 @@
 import { decodeJwt } from "../middware/JwtAction";
 import { queryUserLogin } from "../serviceQuery/userQuery";
 const createError = require("http-errors");
+import {auth} from "../config/connectFireBase";
 
-
-
-export let handleLogin = async (req, res,next) => {
+export let handleLogin = async (req, res, next) => {
   if (req.body.email && req.body.password) {
     const users = await queryUserLogin(req.body.email, req.body.password);
     if (!users.code) {
-      let { tokenrefresh,tokenaccess} = users;
+      let { tokenrefresh, tokenaccess } = users;
       res.setHeader("Authorization", tokenaccess);
       res.cookie("tokenrefresh", tokenrefresh, {
         httpOnly: true,
@@ -17,8 +16,8 @@ export let handleLogin = async (req, res,next) => {
         sameSide: "strict",
         maxAge: 1000 * 60 * 60 * 24 * 7,
       });
-     
-      return  res.status(201).json({message:"ok",statuscode:0});
+
+      return res.status(201).json({ message: "ok", statuscode: 0 });
     } else {
       return next(createError(404, "Account or Password is incorrect"));
     }
@@ -27,9 +26,7 @@ export let handleLogin = async (req, res,next) => {
   }
 };
 
-
-
-export let handleCheckToken = async (req, res,next) => {
+export let handleCheckToken = async (req, res, next) => {
   try {
     const accessToken = req.headers.authorization;
     const info = decodeJwt(accessToken.split(" ")[1]);
@@ -42,3 +39,5 @@ export let handleCheckToken = async (req, res,next) => {
     return next(createError(400, "Bad Request"));
   }
 };
+
+// auth client

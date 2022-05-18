@@ -10,8 +10,9 @@ import {
   ApiStatisticalPostFollowGenres,
   ApiStatisticalPostFollowMonth,
   ApiUpdatePost,
-  ApiYourPost
+  ApiYourPost,
 } from "../serviceQuery/APIpost";
+import { destroyFile } from "../serviceQuery/cloudinary";
 import { ApiDeleteUser, ApiGetUser } from "../serviceQuery/userQuery";
 const createError = require("http-errors");
 export const handleResAllPost = async (req, res, next) => {
@@ -40,18 +41,14 @@ export const handleYourPost = async (req, res, next) => {
 
 export const handleNewPost = async (req, res, next) => {
   try {
-    if (
-      req.body.content &&
-      req.body.title &&
-      req.body.userId &&
-      req.body.genresId
-    ) {
+    const { content, title, genresId, userId, public_id } = req.body;
+    if (content && title && userId && genresId) {
       const data = {
-        content: req.body.content,
-        title: req.body.title,
-        userId: req.body.userId,
-        genresId: req.body.genresId,
-        public_id: req.body.public_id,
+        content: content,
+        title: title,
+        userId: userId,
+        genresId: genresId,
+        public_id: public_id,
         like: 0,
         view: 0,
         validator: 0,
@@ -72,12 +69,22 @@ export const handleNewPost = async (req, res, next) => {
 
 export const handleDeletePost = async (req, res, next) => {
   try {
-    ApiDeletePost(req.query.id)
+    const { id } = req.query;
+    ApiOnePost(id)
+      .then((data) => {
+        data.public_id.split(",").forEach((item) => {
+          destroyFile(item);
+        });
+      })
+      .catch((err) => {
+        return next(createError(422, "Can not delete"));
+      });
+    ApiDeletePost(id)
       .then((data) => {
         return res.status(204).json({ message: "ok", statuscode: 0 });
       })
       .catch((err) => {
-        return next(createError(404, "Not Found Post"));
+        return next(createError(422, "Can not delete"));
       });
   } catch (err) {
     next(createError(404, "Not Found Post"));
@@ -86,15 +93,14 @@ export const handleDeletePost = async (req, res, next) => {
 
 export const handleEditPost = async (req, res, next) => {
   try {
-    const id = req.body.id;
+    const { id, content, title, genresId, public_id } = req.body;
     let postOriginal = await ApiOnePost(id);
     if (postOriginal) {
       const data = {
-        content: req.body.content ? req.body.content : postOriginal.content,
-        title: req.body.title ? req.body.title : postOriginal.title,
-        genresId: req.body.genresId
-          ? +req.body.genresId
-          : +postOriginal.genresId,
+        content: content ? content : postOriginal.content,
+        title: title ? title : postOriginal.title,
+        genresId: genresId ? +genresId : +postOriginal.genresId,
+        public_id: public_id,
         validator: 0,
       };
       try {
