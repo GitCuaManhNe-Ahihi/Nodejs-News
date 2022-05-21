@@ -1,7 +1,6 @@
 import { decodeJwt } from "../middware/JwtAction";
-import { queryUserLogin } from "../serviceQuery/userQuery";
+import { findOneUser, queryUserLogin } from "../serviceQuery/userQuery";
 const createError = require("http-errors");
-import {auth} from "../config/connectFireBase";
 
 export let handleLogin = async (req, res, next) => {
   if (req.body.email && req.body.password) {
@@ -29,9 +28,10 @@ export let handleLogin = async (req, res, next) => {
 export let handleCheckToken = async (req, res, next) => {
   try {
     const accessToken = req.headers.authorization;
-    const info = decodeJwt(accessToken.split(" ")[1]);
-    if (info) {
-      return res.status(200).json({ message: info.message, info });
+    const data= decodeJwt(accessToken.split(" ")[1]);
+    if (data) {
+      const info = await findOneUser(data.id);
+      return res.status(200).json({ message: info.message,info, statuscode: 0 });
     } else {
       return next(createError(403, "Token is invalid"));
     }

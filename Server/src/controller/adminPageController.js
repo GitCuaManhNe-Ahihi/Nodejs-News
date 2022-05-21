@@ -10,10 +10,9 @@ import {
   ApiStatisticalPostFollowGenres,
   ApiStatisticalPostFollowMonth,
   ApiUpdatePost,
-  ApiYourPost,
+  ApiYourPost
 } from "../serviceQuery/APIpost";
 import { destroyFile } from "../serviceQuery/cloudinary";
-import { ApiDeleteUser, ApiGetUser } from "../serviceQuery/userQuery";
 const createError = require("http-errors");
 export const handleResAllPost = async (req, res, next) => {
   const allPost = await ApiAllpost();
@@ -174,24 +173,3 @@ export const handleApiCountFollowId = async (req, res, next) => {
   }
 };
 
-export const handleApiDeleteUser = async (req, res, next) => {
-  try {
-    try {
-      await ApiDeleteUser(req.query.id);
-      return res.status(204).json({ message: "ok", statuscode: 0 });
-    } catch {
-      return next(createError(404, "Not Found User"));
-    }
-  } catch {
-    return next(createError(400, "Bad Request"));
-  }
-};
-
-export const handleApiGetUser = async (req, res, next) => {
-  try {
-    const data = await ApiGetUser();
-    return res.status(200).json(data);
-  } catch {
-    return next(createError(400, "Bad Request"));
-  }
-};

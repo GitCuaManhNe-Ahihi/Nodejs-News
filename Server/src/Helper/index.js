@@ -3,7 +3,7 @@ import { format } from "date-fns";
 const rfs = require("rotating-file-stream");
 import { formatRelative } from "date-fns";
 import mammoth from "mammoth";
-import fs from "fs";
+import fs from "fs/promises";
 import { uploadFile } from "../serviceQuery/cloudinary";
 
 const streamMorgan = rfs.createStream(
@@ -35,7 +35,7 @@ const LogEvent = (type, url, message) => {
 };
 
 export const removeFileImage = (path) => {
-  fs.unlinkSync(path);
+  fs.unlink(path);
 };
 export const handleReadfile = async (path) => {
   try {
@@ -48,7 +48,7 @@ export const handleReadfile = async (path) => {
     fs.unlinkSync(path);
   }
 };
- function formatDate(seconds, date) {
+function formatDate(seconds, date) {
   let formattedDate = "";
   if (seconds) {
     if (seconds < 1000 * 60) {
@@ -70,7 +70,7 @@ export const handleReadfile = async (path) => {
 
   return formattedDate;
 }
- const handleMakeContent = async (images, docxpath) => {
+const handleMakeContent = async (images, docxpath) => {
   try {
     let image = images || [];
     let arrayImage = [];
@@ -97,12 +97,15 @@ export const handleReadfile = async (path) => {
     return err;
   }
 };
+ 
+
 module.exports = {
-    streamMorgan,
-    LogEvent,
-    formatDate,
-    handleMakeContent,
-    removeFileImage,
-    handleReadfile
-  };
+  streamMorgan,
+  LogEvent,
+  formatDate,
+  handleMakeContent,
+  removeFileImage,
+  handleReadfile,
+ 
   
+};

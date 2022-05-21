@@ -64,45 +64,6 @@ export let queryUserLogin = async (email, password) => {
   });
 };
 
-export let ApiCountUser = async () => {
-  return new Promise((resolve, reject) => {
-    db.User.count({
-      raw: true,
-      logging: false,
-    })
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  }).catch((err) => {  
-    reject(err);
-  });
-};
-export let ApiCountUser7DaysAgo = async () => {
-  return new Promise((resolve, reject) => {
-    db.User.count({
-      where: {
-        createdAt: {
-          [Op.gte]: moment().subtract(7, "days").toDate(),
-          [Op.lt]: moment().subtract(6, "days").toDate(),
-        },
-      },
-      raw: true,
-      logging: false,
-    })
-      .then((data) => {
-        resolve(data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  }).catch((err) => {
-    reject(err);
-  });
-};
-
 export let ApiDeleteUser = async (id) => {
   return new Promise((resolve, reject) => {
     db.Post.destroy({
@@ -148,3 +109,99 @@ export let ApiGetUser = async () => {
     reject(err);
   });
 };
+
+export let CheckUser = async (email) => {
+  return new Promise((resolve, reject) => {
+    db.User.findOne({
+      where: {
+        email: email,
+      },
+      raw: true,
+      logging: false,
+    }).then((user) => {
+      if (user) {
+        resolve(user);
+      } else {
+        resolve(false);
+      }
+    });
+  }).catch((err) => {
+    reject(err);
+  });
+};
+
+export let AddUser = async (data) => {
+  return new Promise((resolve, reject) => {
+    db.User.create(data)
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+export let UpdateUser = async (id, data) => {
+  return new Promise((resolve, reject) => {
+    db.User.update(data, {
+      where: {
+        id: id,
+      },
+    })
+      .then((data) => {
+        resolve(data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+export let CheckPassword = async (id, password) => {
+  return new Promise((resolve, reject) => {
+    db.User.findOne({
+      where: {
+        id: id,
+      },
+      raw: true,
+      logging: false,
+    })
+      .then(async (user) => {
+        if (user) {
+          if (await bcrypt.compare(password, user.password)) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        } else {
+          resolve(false);
+        }
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+export let findOneUser = async (id) => {
+  return new Promise((resolve, reject) => {
+    db.User.findOne({
+      where: {
+        id: id,
+      },
+      raw: true,
+      logging: false,
+    })
+      .then((user) => {
+        if (user) {
+          resolve(user);
+        } else {
+          resolve(false);
+        }
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
